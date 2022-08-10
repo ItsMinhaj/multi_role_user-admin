@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:multi_role/home_page.dart';
+import 'package:multi_role/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,14 +14,28 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isLoggedIn = false;
   @override
   void initState() {
     super.initState();
+    isLogin();
+  }
 
-    Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const Homepage()));
-    });
+  isLogin() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+
+    isLoggedIn = sp.getBool("isLogin") ?? false;
+    if (isLoggedIn) {
+      Timer(const Duration(seconds: 3), () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const Homepage()));
+      });
+    } else {
+      Timer(const Duration(seconds: 3), () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+      });
+    }
   }
 
   @override
